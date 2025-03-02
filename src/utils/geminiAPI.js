@@ -1,5 +1,5 @@
 export async function generateReadme(prompt) {
-  const API_KEY = "VITE_GEMINI_API_KEY";
+  const API_KEY = process.env.VITE_GEMINI_API_KEY;
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
   const response = await fetch(url, {
