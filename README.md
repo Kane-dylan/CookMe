@@ -12,6 +12,17 @@
 - 🤖 **Gemini API** – AI-powered API for intelligent responses and features.
 
 ---
+## preview
+Landing
+![image](https://github.com/user-attachments/assets/1e0612f5-03c5-454b-b2f2-8af7ed5666f5)
+
+
+
+DashBoard
+![image](https://github.com/user-attachments/assets/7bc1e775-0ae9-40f5-9bb5-cb02eec61721)
+
+
+---
 
 ## 🌟 Key Feature
 
