@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import MarkdownEditor from "../components/Editor"; // Import Editor
 import ReadmeGenerator from "../components/ReadmeGenerator"; // Import AI README Generator
 import Preview from "../components/Preview"; // Import Preview component
+import { Button } from "@/components/ui/moving-border";
+// import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
   const [user] = useState({ name: "John Doe" }); // Mock user data
@@ -88,23 +90,25 @@ export default function Dashboard() {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
           AI README Generator
         </h2>
-        <ReadmeGenerator markdown={markdown} setMarkdown={setMarkdown} />
+        <ReadmeGenerator setMarkdown={setMarkdown} />
       </div>
 
       {/* Export and Clear Buttons */}
       <div className="mt-6 flex space-x-4">
-        <button
+        <Button
+          variant="destructive"
           onClick={handleExport}
-          className="p-4 bg-red-500 text-white rounded-lg hover:bg-red-600"
+          className="bg-yellow-500 hover:bg-green-600"
         >
           Export README.md
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="destructive"
           onClick={handleClear}
-          className="p-4 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+          className="hover:bg-red-600"
         >
           Clear Editor
-        </button>
+        </Button>
       </div>
     </div>
   );

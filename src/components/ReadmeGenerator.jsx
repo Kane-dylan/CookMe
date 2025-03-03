@@ -1,38 +1,44 @@
 import { useState } from "react";
 import { generateReadme } from "../utils/generateReadme"; // Import API function
 
-export default function ReadmeGenerator({ setMarkdown }) {
+export default function ReadmeGenerator({ markdown, setMarkdown }) {
   const [repoUrl, setRepoUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const customPrompt = `I need a comprehensive README.md file for the GitHub repository: ${repoUrl}
+  const customPrompt = `I need you to generate a README.md file for my GitHub repository: ${repoUrl}
 
-Please analyze the repository contents and generate a complete README.md file with the following sections:
+Please create a README with a modern, visually appealing style using emojis and clean formatting. Follow this exact structure:
 
-1. Project Title and Description (derived from repo name and purpose)
-2. Features (list the main capabilities of the project)
-3. Technologies Used (identify frameworks, languages, and tools)
-4. Installation Instructions (step-by-step setup process)
-5. Usage Examples (with code snippets if applicable)
-6. API Documentation (if applicable)
-7. Configuration Options (environment variables, settings)
-8. Contributing Guidelines (how others can contribute)
-9. Testing Instructions (how to run tests)
-10. License Information
-11. Acknowledgments (credits, inspirations, etc.)
+1. Start with a large emoji related to the project theme followed by the project name as an H1 heading
+2. Write a concise 1-2 sentence description of what the project does
 
-Please format the README.md file using proper Markdown syntax with:
-- Clear headings and subheadings
-- Code blocks with appropriate syntax highlighting
-- Tables where necessary
-- Bullet points and numbered lists for better readability
-- Links to relevant documentation or resources
-- At least one relevant badge (build status, version, etc.)
+3. Create an "## 🚀 Features" section with:
+   - Each feature on its own line starting with "✅ "
+   - Bold feature names followed by a brief description
+   - Features separated by double spaces for proper line breaks
 
-Include a section for "Quick Start" to help new users get up and running quickly. If the repository has a specific focus (e.g., machine learning, web app, API), please tailor the README accordingly.
+4. Create a "## 🛠️ Technologies Used" section with:
+   - Each technology on its own line starting with "🔹 "
+   - Bold technology names followed by a brief description of how it's used
+   - Technologies separated by double spaces
 
-Make sure the README is professional, concise, and helpful for both technical and non-technical users. Avoid generic placeholders - all content should be specific to this project.`;
+5. Create a "## 🎯 Getting Started" section with:
+   - Numbered steps using emoji numbers (1️⃣, 2️⃣, 3️⃣, etc.)
+   - Include code blocks for all commands using \`\`\`sh format
+   - Clear, concise instructions
+
+6. If applicable, add a "## 🌎 Deployment" section with simple deployment instructions
+
+7. End with a "## 🤝 Contributions & Feedback" section that:
+   - Uses friendly, encouraging language
+   - Has checkmarks (✅) for different ways to contribute
+   - Includes emojis throughout
+   - Links to the GitHub repo
+
+Use double spaces at the end of lines where you want line breaks to appear properly in markdown.
+
+Keep the entire README positive, modern, and energetic. Use emojis liberally but purposefully to enhance readability, not distract from it.`;
 
   const handleGenerateReadme = async () => {
     if (!repoUrl.trim()) {
@@ -77,20 +83,16 @@ Make sure the README is professional, concise, and helpful for both technical an
 
       <div className="mb-4">
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-          This will generate a comprehensive README with:
+          This will generate a modern README with:
         </p>
         <ul className="text-sm text-gray-600 dark:text-gray-400 list-disc pl-5 space-y-1">
-          <li>Project title and description</li>
-          <li>Features and capabilities</li>
-          <li>Technologies and frameworks</li>
-          <li>Installation and quick start guide</li>
-          <li>Usage examples with code snippets</li>
-          <li>API documentation (if applicable)</li>
-          <li>Configuration options</li>
-          <li>Contributing guidelines</li>
-          <li>Testing instructions</li>
-          <li>License information</li>
-          <li>Acknowledgments</li>
+          <li>Eye-catching emoji header</li>
+          <li>Concise project description</li>
+          <li>Features section with checkmarks</li>
+          <li>Technologies used with bullet points</li>
+          <li>Getting started guide with numbered steps</li>
+          <li>Deployment instructions (if applicable)</li>
+          <li>Contribution guidelines with friendly language</li>
         </ul>
       </div>
 
@@ -101,7 +103,9 @@ Make sure the README is professional, concise, and helpful for both technical an
         }`}
         disabled={loading}
       >
-        {loading ? "Generating README..." : "Generate Professional README"}
+        {loading
+          ? "Creating Modern README..."
+          : "Generate Modern README with Emojis"}
       </button>
 
       {error && <p className="text-red-500 mt-2">{error}</p>}
