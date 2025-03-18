@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cookme.vercel.app/sitemap.xml 
