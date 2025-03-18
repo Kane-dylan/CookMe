@@ -1,10 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { generateReadme } from "../utils/generateReadme"; // Import API function
 
 export default function ReadmeGenerator({ markdown, setMarkdown }) {
   const [repoUrl, setRepoUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [validRepo, setValidRepo] = useState(null);
+
+  // Function to format and validate repository URL
+  const formatRepositoryUrl = (input) => {
+    try {
+      // Remove whitespace
+      let formattedInput = input.trim();
+
+      // Check if it's already in username/repo format
+      if (/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(formattedInput)) {
+        return formattedInput;
+      }
+
+      // Handle full GitHub URLs
+      if (formattedInput.includes("github.com")) {
+        const url = new URL(formattedInput);
+        const pathSegments = url.pathname.split("/").filter(Boolean);
+
+        if (pathSegments.length >= 2) {
+          // Get username and repo name from the URL path
+          const username = pathSegments[0];
+          let repoName = pathSegments[1];
+
+          // Remove .git extension if present
+          if (repoName.endsWith(".git")) {
+            repoName = repoName.slice(0, -4);
+          }
+
+          return `${username}/${repoName}`;
+        }
+      }
+
+      throw new Error("Invalid repository format");
+    } catch (error) {
+      console.error("Error formatting repository URL:", error);
+      return null;
+    }
+  };
+
+  // Function to check if repository exists
+  const checkRepository = async (formattedRepo) => {
+    if (!formattedRepo) return false;
+
+    try {
+      const response = await fetch(
+        `https://api.github.com/repos/${formattedRepo}`
+      );
+      return response.ok;
+    } catch (error) {
+      console.error("Error checking repository:", error);
+      return false;
+    }
+  };
 
   const customPrompt = `I need you to generate a README.md file for my GitHub repository: ${repoUrl}
 
@@ -50,12 +103,37 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
     setError("");
 
     try {
-      const response = await generateReadme(customPrompt);
+      // Format the repository URL
+      const formattedRepo = formatRepositoryUrl(repoUrl);
+
+      if (!formattedRepo) {
+        throw new Error(
+          "Invalid repository format. Please use username/repo or complete GitHub URL."
+        );
+      }
+
+      // Check if repository exists
+      const repoExists = await checkRepository(formattedRepo);
+
+      if (!repoExists) {
+        throw new Error(
+          `Repository ${formattedRepo} not found. Please check the repository name and try again.`
+        );
+      }
+
+      // Use the formatted repository URL in the prompt
+      const updatedPrompt = customPrompt.replace(repoUrl, formattedRepo);
+
+      // Generate README
+      const response = await generateReadme(updatedPrompt);
       setMarkdown(
         response?.candidates[0]?.content.parts[0]?.text || "No response"
       );
     } catch (err) {
-      setError("Failed to generate README. Check API key & quota.");
+      setError(
+        err.message ||
+          "Failed to generate README. Please check the repository URL or try again."
+      );
       console.error(err);
     }
 
@@ -79,6 +157,10 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
           onChange={(e) => setRepoUrl(e.target.value)}
           className="w-full p-2 border rounded-md dark:bg-gray-700"
         />
+        <p className="text-xs text-gray-500 mt-1">
+          Accepted formats: username/repo, https://github.com/username/repo, or
+          https://github.com/username/repo.git
+        </p>
       </div>
 
       <div className="mb-4">
