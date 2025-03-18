@@ -1,70 +1,12 @@
-import { useState, useEffect } from "react";
-import { useGeminiAPI } from "../hooks/useGeminiAPI"; // Import the hook
+import { useState } from "react";
+import { generateReadme } from "../utils/generateReadme"; // Import API function
 
-export default function ReadmeGenerator({ setMarkdown }) {
+export default function ReadmeGenerator({ markdown, setMarkdown }) {
   const [repoUrl, setRepoUrl] = useState("");
-  const { loading, error: apiError, generateReadme } = useGeminiAPI();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [apiKeyStatus, setApiKeyStatus] = useState("unknown");
 
-  // Check if API key is available
-  useEffect(() => {
-    const checkApiKey = () => {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      if (!apiKey) {
-        setApiKeyStatus("missing");
-        console.warn("Gemini API Key is missing in environment variables");
-      } else {
-        setApiKeyStatus("available");
-        console.log("Gemini API Key is available");
-      }
-    };
-
-    checkApiKey();
-  }, []);
-
-  // Format repository URL to extract just the username/repo part
-  const formatRepositoryName = (input) => {
-    try {
-      // Remove any whitespace
-      input = input.trim();
-
-      // Check if it's already in the correct username/repo format
-      if (/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(input)) {
-        return input;
-      }
-
-      // Handle full GitHub URLs
-      if (input.includes("github.com")) {
-        // Parse the URL to extract the pathname
-        let url;
-        try {
-          url = new URL(input);
-        } catch {
-          // If it's not a valid URL, try adding https:// prefix
-          url = new URL(`https://${input}`);
-        }
-
-        // Extract the pathname and remove leading/trailing slashes
-        let path = url.pathname.replace(/^\/|\/$/g, "");
-
-        // Remove .git extension if present
-        path = path.replace(/\.git$/, "");
-
-        return path;
-      }
-
-      // Remove .git extension if the user just entered something like username/repo.git
-      return input.replace(/\.git$/, "");
-    } catch (err) {
-      console.error("Error formatting repository name:", err);
-      return input; // Return original input if there's an error
-    }
-  };
-
-  const customPrompt = `I need you to generate a README.md file for my GitHub repository: ${formatRepositoryName(
-    repoUrl
-  )}
+  const customPrompt = `I need you to generate a README.md file for my GitHub repository: ${repoUrl}
 
 Please create a README with a modern, visually appealing style using emojis and clean formatting. Follow this exact structure:
 
@@ -104,46 +46,24 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
       return;
     }
 
-    if (apiKeyStatus === "missing") {
-      setError(
-        "API key is missing. The README generator cannot function without it."
-      );
-      return;
-    }
-
-    const formattedRepo = formatRepositoryName(repoUrl);
-    console.log(`Generating README for repository: ${formattedRepo}`);
-
+    setLoading(true);
     setError("");
-    try {
-      // We create a custom prompt with the properly formatted repository name
-      const customPromptWithFormattedRepo = customPrompt.replace(
-        formatRepositoryName(repoUrl),
-        formattedRepo
-      );
 
-      const result = await generateReadme(customPromptWithFormattedRepo);
-      if (result) {
-        setMarkdown(result);
-      } else {
-        setError("Failed to generate README. Check API key & quota.");
-      }
+    try {
+      const response = await generateReadme(customPrompt);
+      setMarkdown(
+        response?.candidates[0]?.content.parts[0]?.text || "No response"
+      );
     } catch (err) {
-      setError(`Failed to generate README: ${err.message}`);
+      setError("Failed to generate README. Check API key & quota.");
       console.error(err);
     }
+
+    setLoading(false);
   };
 
   return (
     <div className="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800">
-      {apiKeyStatus === "missing" && (
-        <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded-lg">
-          <strong>⚠️ API Key Missing:</strong> The Gemini API key is not set in
-          environment variables. README generation will not work until this is
-          fixed.
-        </div>
-      )}
-
       <div className="mb-4">
         <label
           htmlFor="repoUrl"
@@ -159,9 +79,6 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
           onChange={(e) => setRepoUrl(e.target.value)}
           className="w-full p-2 border rounded-md dark:bg-gray-700"
         />
-        <p className="text-xs text-gray-500 mt-1">
-          Enter either a full GitHub URL or just the username/repository format.
-        </p>
       </div>
 
       <div className="mb-4">
@@ -184,16 +101,14 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
         className={`w-full mt-2 px-4 py-2 rounded-lg text-white ${
           loading ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-600"
         }`}
-        disabled={loading || apiKeyStatus === "missing"}
+        disabled={loading}
       >
         {loading
           ? "Creating Modern README..."
           : "Generate Modern README with Emojis"}
       </button>
 
-      {(error || apiError) && (
-        <p className="text-red-500 mt-2">{error || apiError}</p>
-      )}
+      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
   );
 }
