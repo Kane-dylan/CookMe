@@ -23,7 +23,48 @@ export default function ReadmeGenerator({ setMarkdown }) {
     checkApiKey();
   }, []);
 
-  const customPrompt = `I need you to generate a README.md file for my GitHub repository: ${repoUrl}
+  // Format repository URL to extract just the username/repo part
+  const formatRepositoryName = (input) => {
+    try {
+      // Remove any whitespace
+      input = input.trim();
+
+      // Check if it's already in the correct username/repo format
+      if (/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(input)) {
+        return input;
+      }
+
+      // Handle full GitHub URLs
+      if (input.includes("github.com")) {
+        // Parse the URL to extract the pathname
+        let url;
+        try {
+          url = new URL(input);
+        } catch {
+          // If it's not a valid URL, try adding https:// prefix
+          url = new URL(`https://${input}`);
+        }
+
+        // Extract the pathname and remove leading/trailing slashes
+        let path = url.pathname.replace(/^\/|\/$/g, "");
+
+        // Remove .git extension if present
+        path = path.replace(/\.git$/, "");
+
+        return path;
+      }
+
+      // Remove .git extension if the user just entered something like username/repo.git
+      return input.replace(/\.git$/, "");
+    } catch (err) {
+      console.error("Error formatting repository name:", err);
+      return input; // Return original input if there's an error
+    }
+  };
+
+  const customPrompt = `I need you to generate a README.md file for my GitHub repository: ${formatRepositoryName(
+    repoUrl
+  )}
 
 Please create a README with a modern, visually appealing style using emojis and clean formatting. Follow this exact structure:
 
@@ -70,9 +111,18 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
       return;
     }
 
+    const formattedRepo = formatRepositoryName(repoUrl);
+    console.log(`Generating README for repository: ${formattedRepo}`);
+
     setError("");
     try {
-      const result = await generateReadme(customPrompt);
+      // We create a custom prompt with the properly formatted repository name
+      const customPromptWithFormattedRepo = customPrompt.replace(
+        formatRepositoryName(repoUrl),
+        formattedRepo
+      );
+
+      const result = await generateReadme(customPromptWithFormattedRepo);
       if (result) {
         setMarkdown(result);
       } else {
@@ -109,6 +159,9 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
           onChange={(e) => setRepoUrl(e.target.value)}
           className="w-full p-2 border rounded-md dark:bg-gray-700"
         />
+        <p className="text-xs text-gray-500 mt-1">
+          Enter either a full GitHub URL or just the username/repository format.
+        </p>
       </div>
 
       <div className="mb-4">
