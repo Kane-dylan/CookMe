@@ -10,9 +10,20 @@ export function useGeminiAPI() {
     setError(null);
 
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+
+    // Debug log for production troubleshooting (will be removed in production build if not in development)
+    if (!API_KEY) {
+      console.error("API_KEY is missing. Check environment variables.");
+      setError("API key is missing. Please check your environment variables.");
+      setLoading(false);
+      return null;
+    }
+
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
     try {
+      console.log("Making API request to Gemini...");
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -23,13 +34,22 @@ export function useGeminiAPI() {
         }),
       });
 
+      console.log("API response status:", response.status);
+
       if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
+        const errorText = await response
+          .text()
+          .catch(() => "Failed to get error details");
+        console.error("API Error Details:", errorText);
+        throw new Error(
+          `API request failed with status ${response.status}: ${errorText}`
+        );
       }
 
       const data = await response.json();
 
       if (data.error) {
+        console.error("API returned error object:", data.error);
         throw new Error(data.error.message || "API returned an error");
       }
 

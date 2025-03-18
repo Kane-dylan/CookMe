@@ -1,10 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGeminiAPI } from "../hooks/useGeminiAPI"; // Import the hook
 
 export default function ReadmeGenerator({ setMarkdown }) {
   const [repoUrl, setRepoUrl] = useState("");
   const { loading, error: apiError, generateReadme } = useGeminiAPI();
   const [error, setError] = useState("");
+  const [apiKeyStatus, setApiKeyStatus] = useState("unknown");
+
+  // Check if API key is available
+  useEffect(() => {
+    const checkApiKey = () => {
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!apiKey) {
+        setApiKeyStatus("missing");
+        console.warn("Gemini API Key is missing in environment variables");
+      } else {
+        setApiKeyStatus("available");
+        console.log("Gemini API Key is available");
+      }
+    };
+
+    checkApiKey();
+  }, []);
 
   const customPrompt = `I need you to generate a README.md file for my GitHub repository: ${repoUrl}
 
@@ -46,6 +63,13 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
       return;
     }
 
+    if (apiKeyStatus === "missing") {
+      setError(
+        "API key is missing. The README generator cannot function without it."
+      );
+      return;
+    }
+
     setError("");
     try {
       const result = await generateReadme(customPrompt);
@@ -55,13 +79,21 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
         setError("Failed to generate README. Check API key & quota.");
       }
     } catch (err) {
-      setError("Failed to generate README. Check API key & quota.");
+      setError(`Failed to generate README: ${err.message}`);
       console.error(err);
     }
   };
 
   return (
     <div className="mt-4 p-4 border rounded-lg bg-gray-100 dark:bg-gray-800">
+      {apiKeyStatus === "missing" && (
+        <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded-lg">
+          <strong>⚠️ API Key Missing:</strong> The Gemini API key is not set in
+          environment variables. README generation will not work until this is
+          fixed.
+        </div>
+      )}
+
       <div className="mb-4">
         <label
           htmlFor="repoUrl"
@@ -99,7 +131,7 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
         className={`w-full mt-2 px-4 py-2 rounded-lg text-white ${
           loading ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-600"
         }`}
-        disabled={loading}
+        disabled={loading || apiKeyStatus === "missing"}
       >
         {loading
           ? "Creating Modern README..."
