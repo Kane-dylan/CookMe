@@ -2,11 +2,14 @@ import { useState } from "react";
 
 export function useGeminiAPI() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [response, setResponse] = useState("");
 
   async function generateReadme(prompt) {
     setLoading(true);
-    const API_KEY = "YOUR_GEMINI_API_KEY";
+    setError(null);
+
+    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
     try {
@@ -20,18 +23,29 @@ export function useGeminiAPI() {
         }),
       });
 
-      const data = await response.json();
-      let generatedText =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
-      let modifiedText = `# Generated README\n\n${generatedText}\n\n**Edited by AI**`;
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
 
-      setResponse(modifiedText);
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error.message || "API returned an error");
+      }
+
+      const generatedText =
+        data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+      setResponse(generatedText);
+      return generatedText;
     } catch (error) {
       console.error("Error generating README:", error);
+      setError(error.message || "Failed to generate README.");
       setResponse("Failed to generate README.");
+      return null;
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
-  return { response, loading, generateReadme };
+  return { response, loading, error, generateReadme };
 }

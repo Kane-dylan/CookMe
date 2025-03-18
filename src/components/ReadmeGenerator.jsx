@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { generateReadme } from "../utils/generateReadme"; // Import API function
+import { useGeminiAPI } from "../hooks/useGeminiAPI"; // Import the hook
 
-export default function ReadmeGenerator({ markdown, setMarkdown }) {
+export default function ReadmeGenerator({ setMarkdown }) {
   const [repoUrl, setRepoUrl] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { loading, error: apiError, generateReadme } = useGeminiAPI();
   const [error, setError] = useState("");
 
   const customPrompt = `I need you to generate a README.md file for my GitHub repository: ${repoUrl}
@@ -46,20 +46,18 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
       return;
     }
 
-    setLoading(true);
     setError("");
-
     try {
-      const response = await generateReadme(customPrompt);
-      setMarkdown(
-        response?.candidates[0]?.content.parts[0]?.text || "No response"
-      );
+      const result = await generateReadme(customPrompt);
+      if (result) {
+        setMarkdown(result);
+      } else {
+        setError("Failed to generate README. Check API key & quota.");
+      }
     } catch (err) {
       setError("Failed to generate README. Check API key & quota.");
       console.error(err);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -108,7 +106,9 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
           : "Generate Modern README with Emojis"}
       </button>
 
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+      {(error || apiError) && (
+        <p className="text-red-500 mt-2">{error || apiError}</p>
+      )}
     </div>
   );
 }
