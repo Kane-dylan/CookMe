@@ -66,7 +66,7 @@ module.exports = {
   },
   plugins: [
     addVariablesForColors,
-    require("tailwindcss-animate"),
+    require("tailwindcss-animate", "@tailwindcss/typography"),
     addVariablesForColors,
   ],
 };

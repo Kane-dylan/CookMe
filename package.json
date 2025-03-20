@@ -12,10 +12,12 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
     "@tabler/icons-react": "^3.30.0",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/react-syntax-highlighter": "^15.5.13",
     "axios": "^1.8.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "github-markdown-css": "^5.8.1",
     "lucide-react": "^0.477.0",
     "motion": "^12.4.7",
     "openai": "^4.86.1",

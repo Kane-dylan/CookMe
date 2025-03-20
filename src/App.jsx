@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./Layout/Layout";
 import Dashboard from "./Pages/Dashboard";
 import Landing from "./Pages/Landing";
+import "./styles/markdown.css"; // Import markdown styles
 
 const router = createBrowserRouter([
   {
