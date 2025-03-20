@@ -9,7 +9,26 @@ export function useGeminiAPI() {
     setLoading(true);
     setError(null);
 
+    // Check all environment variables to help debug
+    console.log(
+      "Environment variables available:",
+      Object.keys(import.meta.env)
+        .filter((key) => key.startsWith("VITE_"))
+        .map(
+          (key) =>
+            `${key}: ${
+              key.includes("KEY") ? "[REDACTED]" : import.meta.env[key]
+            }`
+        )
+    );
+
     const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+
+    // More detailed debugging
+    console.log(
+      "API Key status:",
+      API_KEY ? "Found (length: " + API_KEY.length + ")" : "Not found"
+    );
 
     // Debug log for production troubleshooting (will be removed in production build if not in development)
     if (!API_KEY) {
