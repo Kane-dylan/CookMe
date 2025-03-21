@@ -124,22 +124,10 @@ export default function Dashboard() {
         border-r border-gray-200 dark:border-gray-700 flex flex-col
       `}
       >
-        {/* Sidebar Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
-          <FaGithub className="h-6 w-6 text-primary mr-2" />
-          <h1 className="text-xl font-bold">ReadMeAI</h1>
-          {/* Mobile Close Button */}
-          {isMobile && (
-            <button onClick={toggleSidebar} className="ml-auto">
-              <FaTimes />
-            </button>
-          )}
-        </div>
-
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <h1 className="text-md font-bold text-gray-600 dark:text-gray-400">
             Welcome, {user.name}
-          </p>
+          </h1>
         </div>
 
         {/* ReadmeGenerator component */}
