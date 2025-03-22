@@ -11,60 +11,49 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
-import MarkdownEditor from "../components/Editor"; // Import Editor
-import Preview from "../components/Preview"; // Import Preview component
-import ReadmeGenerator from "../components/ReadmeGenerator"; // Import ReadmeGenerator
+import MarkdownEditor from "../components/Editor";
+import Preview from "../components/Preview";
+import ReadmeGenerator from "../components/ReadmeGenerator";
 
 export default function Dashboard() {
-  const [user] = useState({ name: "Stranger" }); // Mock user data
+  const [user] = useState({ name: "Stranger" });
   const [markdown, setMarkdown] = useState(() => {
-    // Initialize state from localStorage or use default value
     const savedMarkdown = localStorage.getItem("markdown");
     return (
       savedMarkdown ||
       "# Welcome to ReadMeAI\n\nStart typing to create your README, or use the AI generator to get started."
     );
   });
-  const [editorMode, setEditorMode] = useState("split"); // split, editor, preview
+  const [editorMode, setEditorMode] = useState("split");
   const [repoUrl, setRepoUrl] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Default to false for consistency
   const [isMobile, setIsMobile] = useState(false);
-  const sidebarWasManuallyToggled = useRef(false);
+  const hasManuallyToggled = useRef(false);
 
-  // Check screen size on mount and window resize
+  // Handle screen size changes
   useEffect(() => {
     const checkScreenSize = () => {
-      const mobile = window.innerWidth < 768; // Consider below 768px as mobile
+      const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      // Auto-close sidebar on mobile
-      if (mobile && sidebarOpen) {
+      // Only auto-close sidebar on mobile if not manually toggled
+      if (mobile && !hasManuallyToggled.current && sidebarOpen) {
         setSidebarOpen(false);
-      } else if (
-        !mobile &&
-        !sidebarOpen &&
-        !sidebarWasManuallyToggled.current
-      ) {
+      } else if (!mobile && !sidebarOpen && !hasManuallyToggled.current) {
         setSidebarOpen(true);
       }
     };
 
-    // Initial check
     checkScreenSize();
-
-    // Add resize listener
     window.addEventListener("resize", checkScreenSize);
-
-    // Cleanup
     return () => window.removeEventListener("resize", checkScreenSize);
   }, [sidebarOpen]);
 
-  // Save to localStorage whenever markdown changes
+  // Save markdown to localStorage
   useEffect(() => {
     localStorage.setItem("markdown", markdown);
   }, [markdown]);
 
-  // Function to export markdown as a file
   const handleExport = () => {
     const blob = new Blob([markdown], { type: "text/markdown" });
     const link = document.createElement("a");
@@ -73,7 +62,6 @@ export default function Dashboard() {
     link.click();
   };
 
-  // Function to clear the editor and localStorage
   const handleClear = () => {
     if (
       confirm(
@@ -86,23 +74,14 @@ export default function Dashboard() {
     }
   };
 
-  // Toggle sidebar
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-    sidebarWasManuallyToggled.current = true;
-
-    // After 100ms, reset the manual toggle flag if on mobile
-    // This allows the automatic behavior to work again when screen size changes
-    setTimeout(() => {
-      if (window.innerWidth < 768) {
-        sidebarWasManuallyToggled.current = false;
-      }
-    }, 100);
+    setSidebarOpen((prev) => !prev);
+    hasManuallyToggled.current = true; // Mark as manually toggled
   };
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
-      {/* Mobile Toggle Button - Visible only on mobile */}
+      {/* Mobile Toggle Button */}
       <button
         onClick={toggleSidebar}
         className="md:hidden fixed top-4 right-4 z-20 p-2 rounded-full bg-primary text-white shadow-lg"
@@ -110,19 +89,15 @@ export default function Dashboard() {
         {sidebarOpen ? <FaTimes /> : <FaBars />}
       </button>
 
-      {/* Sidebar - Positioned differently based on screen size */}
+      {/* Sidebar */}
       <div
         className={`
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
-        ${
-          isMobile
-            ? "fixed top-0 left-0 z-10 h-screen w-screen md:w-64 bg-white dark:bg-gray-800"
-            : "w-64"
-        } 
-        transition-transform duration-300 ease-in-out 
-        md:static ${sidebarOpen ? "md:block" : "md:hidden"}
-        border-r border-gray-200 dark:border-gray-700 flex flex-col
-      `}
+          fixed inset-y-0 left-0 z-10 w-64 bg-white dark:bg-gray-800
+          transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          transition-transform duration-300 ease-in-out
+          md:relative md:translate-x-0 md:block
+          border-r border-gray-200 dark:border-gray-700 flex flex-col
+        `}
       >
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <h1 className="text-md font-bold text-gray-600 dark:text-gray-400">
@@ -130,12 +105,10 @@ export default function Dashboard() {
           </h1>
         </div>
 
-        {/* ReadmeGenerator component */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 overflow-auto">
           <ReadmeGenerator markdown={markdown} setMarkdown={setMarkdown} />
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 p-4 overflow-y-auto">
           <div className="mb-4">
             <h2 className="text-sm font-semibold mb-2">View Options</h2>
@@ -195,7 +168,6 @@ export default function Dashboard() {
           </div>
         </nav>
 
-        {/* Export and Clear buttons at the bottom */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
           <button
             onClick={handleExport}
@@ -219,37 +191,31 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div
-        className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${
-          !sidebarOpen ? "md:ml-0 md:w-full" : "md:ml-0"
-        }`}
-      >
-        {/* Desktop Toggle Button - Hidden on mobile */}
-        <div className="hidden md:block p-2">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Desktop Toggle Button */}
+        {/* <div className="hidden md:block p-2">
           <button
             onClick={toggleSidebar}
             className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             {sidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
-        </div>
+        </div> */}
 
         {/* Editor and Preview */}
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-          {/* Editor */}
           {(editorMode === "editor" || editorMode === "split") && (
             <div
               className={`${
                 editorMode === "split" ? "md:w-1/2 h-1/2 md:h-full" : "flex-1"
               } overflow-auto`}
             >
-              <div className="h-full p-2">
+              <div className="h-full">
                 <MarkdownEditor value={markdown} onChange={setMarkdown} />
               </div>
             </div>
           )}
 
-          {/* Preview */}
           {(editorMode === "preview" || editorMode === "split") && (
             <div
               className={`${
