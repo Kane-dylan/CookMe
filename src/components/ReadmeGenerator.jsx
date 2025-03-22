@@ -210,31 +210,16 @@ Keep the entire README positive, modern, and energetic. Use emojis liberally but
         </p>
       </div>
 
-      <div className="mb-4">
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-          This will generate a modern README with:
-        </p>
-        <ul className="text-sm text-gray-600 dark:text-gray-400 list-disc pl-5 space-y-1">
-          <li>Eye-catching emoji header</li>
-          <li>Concise project description</li>
-          <li>Features section with checkmarks</li>
-          <li>Technologies used with bullet points</li>
-          <li>Getting started guide with numbered steps</li>
-          <li>Deployment instructions (if applicable)</li>
-          <li>Contribution guidelines with friendly language</li>
-        </ul>
-      </div>
-
       <button
         onClick={handleGenerateReadme}
-        className={`w-full mt-2 px-4 py-2 rounded-lg text-white ${
+        className={`sm:w-auto w-full mt-2 px-4 py-2 rounded-lg text-white ${
           loading ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-600"
         }`}
         disabled={loading}
       >
         {loading
           ? "Creating Modern README..."
-          : "Generate Modern README with Emojis"}
+          : "Generate Modern README 🚀"}
       </button>
 
       {error && (

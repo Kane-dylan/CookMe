@@ -10,7 +10,7 @@ export default function Navbar() {
           <span className="font-bold text-xl">ReadMeAI</span>
         </div>
         <nav>
-          <ul className="flex space-x-6">
+          <ul className="hidden md:flex space-x-6">
             <li>
               <Link to="/" className="text-sm font-medium hover:text-primary">
                 Home

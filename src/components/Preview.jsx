@@ -1,11 +1,14 @@
 import ReactMarkdown from "react-markdown";
+import "github-markdown-css";
 
 export default function Preview({ markdown }) {
   return (
-    <div className="w-full h-80 p-4 border rounded-lg bg-gray-100 dark:bg-gray-700 dark:text-white overflow-auto">
-      <ReactMarkdown>
-        {markdown || "*Live preview will appear here...*"}
-      </ReactMarkdown>
+    <div className="w-full h-full rounded-lg p-4 bg-[#0d1117] dark:bg-gray-900 overflow-auto">
+      <div className="markdown-body dark:text-white">
+        <ReactMarkdown>
+          {markdown || "*Live preview will appear here...*"}
+        </ReactMarkdown>
+      </div>
     </div>
   );
 }

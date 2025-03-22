@@ -88,7 +88,7 @@ export const CodeBlock = ({
         <textarea
           value={editableCode}
           onChange={handleCodeChange}
-          className="w-full h-64 p-4 bg-transparent text-white font-mono text-sm resize-none focus:outline-none overflow-auto"
+          className="w-full h-full p-4 bg-transparent text-white font-mono text-sm resize-none focus:outline-none overflow-auto"
           spellCheck="false"
           placeholder="Write your markdown here..."
         />
