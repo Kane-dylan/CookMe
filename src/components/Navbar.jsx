@@ -11,7 +11,7 @@ export default function Navbar() {
       <header className="border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <FaGithub className="h-6 w-6 text-primary" />
+            <FaGithub className="h-6 w-6 dark:text-primary" />
             <span className="font-bold text-xl dark:text-white">ReadMeAI</span>
           </div>
           <nav>
