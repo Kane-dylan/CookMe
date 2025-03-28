@@ -26,7 +26,7 @@ DashBoard
 
 ## 🌟 Key Feature
 
-🔥 **AI-Powered README Generator** – Spyder-2.0 is designed to generate professional and well-structured README files automatically using AI. Say goodbye to manual documentation! 📝🤖
+🔥 **AI-Powered README Generator** – CookMe is designed to generate professional and well-structured README files automatically using AI. Say goodbye to manual documentation! 📝🤖
 
 ---
 
@@ -34,12 +34,12 @@ DashBoard
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/Kane-dylan/Spyder-2.0.git
+   git clone https://github.com/Kane-dylan/CookMe.git
    ```
 
 2. **Navigate to the Project Directory:**
    ```bash
-   cd Spyder-2.0
+   cd CookMe
    ```
 
 3. **Install Dependencies:**
@@ -84,4 +84,4 @@ This project is licensed under the MIT License. 📄
 
 ## 🌟 Show Some Love
 
-If you like this project, give it a ⭐ on [GitHub](https://github.com/Kane-dylan/Spyder-2.0)! ❤️
+If you like this project, give it a ⭐ on [GitHub](https://github.com/Kane-dylan/CookMe)! ❤️
