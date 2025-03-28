@@ -1,6 +1,6 @@
 # 🕵️ CookMe
 
-🚀 **Spyder-2.0** is a sleek and modern web application built using **React**, **Tailwind CSS**, and **Vite**, powered by the **Gemini API** for enhanced AI capabilities. This project offers a seamless and fast experience for users looking to interact with AI-powered functionalities.
+🚀 **CookMe** is a sleek and modern web application built using **React**, **Tailwind CSS**, and **Vite**, powered by the **Gemini API** for enhanced AI capabilities. This project offers a seamless and fast experience for users looking to interact with AI-powered functionalities.
 
 ---
 
