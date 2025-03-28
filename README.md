@@ -12,14 +12,29 @@
 - 🤖 **Gemini API** – AI-powered API for intelligent responses and features.
 
 ---
-## preview
+## preview (Dark Mode)
 Landing
-![image](https://github.com/user-attachments/assets/1e0612f5-03c5-454b-b2f2-8af7ed5666f5)
+![Cookme1](https://github.com/user-attachments/assets/9f93e46a-496f-4a27-97ab-3fc8ad72dfbc)
 
 
 
 DashBoard
-![image](https://github.com/user-attachments/assets/7bc1e775-0ae9-40f5-9bb5-cb02eec61721)
+![Cookme2](https://github.com/user-attachments/assets/ebc38ccb-74c7-4978-aa10-b91f500d4191)
+
+<details>
+  <summary>Light Mode</summary>
+  <table>
+     <tr>
+      <td style="padding-right: 20px;">
+       <img src="https://github.com/user-attachments/assets/360b1e50-7f13-438d-9124-3ef991a32a38" width="500">
+         </td>
+         <td>
+       <img src="https://github.com/user-attachments/assets/25c7f417-58ec-43e1-a796-61ca3686a882" width="500">
+       </td>
+    </tr>
+  </table>
+</details>
+
 
 
 ---
