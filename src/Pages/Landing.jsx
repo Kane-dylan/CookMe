@@ -6,7 +6,6 @@ import Footer from "./Footer";
 export default function Landing() {
   return (
     <div className="flex flex-col min-h-screen">
-
       {/* Hero Section */}
       <main className="flex-grow">
         <section className="py-20 md:py-32">
@@ -22,13 +21,13 @@ export default function Landing() {
             <div className="flex justify-center space-x-4">
               <Link
                 to="/dashboard"
-                className="px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors"
+                className="px-8 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/70 transition-colors"
               >
                 Get Started
               </Link>
               <a
                 href="#features"
-                className="px-8 py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                className="px-8 py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 hover:text-primary transition-colors"
               >
                 Learn More
               </a>
@@ -37,42 +36,44 @@ export default function Landing() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-16 bg-gray-50">
+        <section id="features" className="py-16 bg-gray-50 dark:bg-gray-800">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
               Key Features
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-sm">
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                   <FaBolt className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
                   AI-Powered Generation
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                   Our advanced AI analyzes your project and creates tailored
                   README content.
                 </p>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-sm">
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                   <FaCode className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
                   Customizable Templates
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                   Choose from various templates or customize to match your
                   project's needs.
                 </p>
               </div>
-              <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-sm">
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                   <FaMarkdown className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Markdown Support</h3>
-                <p className="text-gray-600">
+                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                  Markdown Support
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
                   Full markdown support with live preview and easy editing
                   capabilities.
                 </p>

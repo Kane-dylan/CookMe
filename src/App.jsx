@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./Layout/Layout";
 import Dashboard from "./Pages/Dashboard";
 import Landing from "./Pages/Landing";
+import { ThemeProvider } from "./components/ThemeProvider"; // Update to named import
 import "./styles/markdown.css"; // Import markdown styles
 
 const router = createBrowserRouter([
@@ -16,5 +17,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }

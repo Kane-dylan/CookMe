@@ -5,10 +5,12 @@ import Footer from "../Pages/Footer";
 
 const Layout = () => {
   return (
-    <div>
-      <main className="min-h-screen mx-auto overflow-hidden-clip">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
+      <main className="min-h-screen mx-auto overflow-hidden-clip bg-white dark:bg-gray-900">
         <Navbar />
-        <Outlet />
+        <div className="bg-white dark:bg-gray-900">
+          <Outlet />
+        </div>
         <Footer />
       </main>
     </div>
